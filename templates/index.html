@@ -2,46 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Diabetes Prediction</title>
+    <title>Diabetes Predictor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </head>
 <body>
-    <!-- Theme toggle -->
-    <div class="theme-toggle">
-        <label class="switch">
-            <input type="checkbox" id="themeToggle">
-            <span class="slider"></span>
-        </label>
-    </div>
+    <h1>Diabetes Prediction</h1>
+    <form action="/predict" method="post">
 
-    <div class="container">
-        <h1>Diabetes Prediction</h1>
-        <p>Enter your health metrics below to get a quick prediction.</p>
+        <!-- Pregnancies (whole numbers) -->
+        <label for="pregnancies">Pregnancies:</label>
+        <input type="number" name="pregnancies" min="0" step="1" required><br><br>
 
-        <form action="/predict" method="post">
-            <input type="number" name="Pregnancies" placeholder="Pregnancies" required>
-            <input type="number" name="Glucose" placeholder="Glucose" required>
-            <input type="number" name="BloodPressure" placeholder="Blood Pressure" required>
-            <input type="number" name="SkinThickness" placeholder="Skin Thickness" required>
-            <input type="number" name="Insulin" placeholder="Insulin" required>
-            <input type="number" name="BMI" placeholder="BMI" required>
-            <input type="number" name="DiabetesPedigreeFunction" placeholder="Diabetes Pedigree Function" required>
-            <input type="number" name="Age" placeholder="Age" required>
-            <button type="submit">Predict</button>
-        </form>
+        <!-- Glucose (mg/dL, usually integer but allow decimals) -->
+        <label for="glucose">Glucose:</label>
+        <input type="number" name="glucose" min="0" step="1" required><br><br>
 
-        <!-- Prediction result -->
-        {% if prediction_text %}
-            <h2 class="prediction {{ 'positive' if 'have diabetes' in prediction_text else 'negative' }}">
-                {{ prediction_text }}
-            </h2>
-        {% endif %}
+        <!-- Blood Pressure (mm Hg) -->
+        <label for="bloodpressure">Blood Pressure:</label>
+        <input type="number" name="bloodpressure" min="0" step="1" required><br><br>
 
-        <p class="disclaimer">
-            This app provides a model-based prediction. It does not replace professional medical advice.
-        </p>
-    </div>
+        <!-- Skin Thickness (mm) -->
+        <label for="skin">Skin Thickness:</label>
+        <input type="number" name="skin" min="0" step="1" required><br><br>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+        <!-- Insulin (µU/mL) -->
+        <label for="insulin">Insulin:</label>
+        <input type="number" name="insulin" min="0" step="1" required><br><br>
+
+        <!-- BMI (kg/m², decimals allowed) -->
+        <label for="bmi">BMI:</label>
+        <input type="number" name="bmi" min="0" step="0.1" required><br><br>
+
+        <!-- Diabetes Pedigree Function (0–1, decimals allowed) -->
+        <label for="pedigree">Diabetes Pedigree Function:</label>
+        <input type="number" name="pedigree" min="0" max="1" step="0.001" required><br><br>
+
+        <!-- Age (years, whole numbers) -->
+        <label for="age">Age:</label>
+        <input type="number" name="age" min="1" step="1" required><br><br>
+
+        <button type="submit">Predict</button>
+    </form>
 </body>
 </html>

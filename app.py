@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
 import joblib
 import numpy as np
-import os
 
 app = Flask(__name__)
 
@@ -16,30 +15,38 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        # Collect form data
-        features = [
-            float(request.form["Pregnancies"]),
-            float(request.form["Glucose"]),
-            float(request.form["BloodPressure"]),
-            float(request.form["SkinThickness"]),
-            float(request.form["Insulin"]),
-            float(request.form["BMI"]),
-            float(request.form["DiabetesPedigreeFunction"]),
-            float(request.form["Age"])
-        ]
+        # Collect inputs from form
+        pregnancies = int(request.form["pregnancies"])
+        glucose = float(request.form["glucose"])
+        bloodpressure = float(request.form["bloodpressure"])
+        skin = float(request.form["skin"])
+        insulin = float(request.form["insulin"])
+        bmi = float(request.form["bmi"])
+        pedigree = float(request.form["pedigree"])
+        age = int(request.form["age"])
 
-        # Scale and predict
-        scaled_features = scaler.transform([features])
-        prediction = model.predict(scaled_features)[0]
+        # Put into numpy array
+        input_data = np.array([[pregnancies, glucose, bloodpressure,
+                                skin, insulin, bmi, pedigree, age]])
 
-        # Map prediction to message
-        result = "You have diabetes" if prediction == 1 else "You do not have diabetes"
+        # Scale input
+        input_scaled = scaler.transform(input_data)
 
-        return render_template("index.html", prediction_text=result)
+        # Predict
+        prediction = model.predict(input_scaled)[0]
+
+        # Friendly message
+        if prediction == 1:
+            result = "You have diabetes"
+            color = "red"
+        else:
+            result = "You do not have diabetes"
+            color = "green"
+
+        return render_template("index.html", prediction_text=result, color=color)
 
     except Exception as e:
-        return render_template("index.html", prediction_text=f"Error: {e}")
+        return render_template("index.html", prediction_text=f"Error: {str(e)}", color="orange")
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(debug=True)
