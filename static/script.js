@@ -1,20 +1,24 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const toggle = document.getElementById("themeToggle");
-    const body = document.body;
+// Toggle theme and update button text
+function toggleTheme() {
+    document.body.classList.toggle("dark-mode");
+    updateButtonText();
+}
 
-    // Load saved theme
-    if (localStorage.getItem("theme") === "light") {
-        body.classList.add("light-theme");
-        toggle.checked = true;
+// Update button label based on current theme
+function updateButtonText() {
+    const btn = document.getElementById("theme-toggle");
+    if (document.body.classList.contains("dark-mode")) {
+        btn.innerText = "Switch to Light Mode";
+    } else {
+        btn.innerText = "Switch to Dark Mode";
     }
+}
 
-    toggle.addEventListener("change", function () {
-        if (toggle.checked) {
-            body.classList.add("light-theme");
-            localStorage.setItem("theme", "light");
-        } else {
-            body.classList.remove("light-theme");
-            localStorage.setItem("theme", "dark");
-        }
-    });
-});
+// Add button on page load
+window.onload = function() {
+    const btn = document.createElement("button");
+    btn.id = "theme-toggle";
+    document.body.appendChild(btn);
+    btn.onclick = toggleTheme;
+    updateButtonText();
+};
