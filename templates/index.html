@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Diabetes Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- Theme toggle -->
+    <div class="theme-toggle">
+        <label class="switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="container">
+        <h1>Diabetes Prediction</h1>
+        <p>Enter your health metrics below to get a quick prediction.</p>
+
+        <form action="/predict" method="post">
+            <input type="number" name="Pregnancies" placeholder="Pregnancies" required>
+            <input type="number" name="Glucose" placeholder="Glucose" required>
+            <input type="number" name="BloodPressure" placeholder="Blood Pressure" required>
+            <input type="number" name="SkinThickness" placeholder="Skin Thickness" required>
+            <input type="number" name="Insulin" placeholder="Insulin" required>
+            <input type="number" name="BMI" placeholder="BMI" required>
+            <input type="number" name="DiabetesPedigreeFunction" placeholder="Diabetes Pedigree Function" required>
+            <input type="number" name="Age" placeholder="Age" required>
+            <button type="submit">Predict</button>
+        </form>
+
+        <!-- Prediction result -->
+        {% if prediction_text %}
+            <h2 class="prediction {{ 'positive' if 'have diabetes' in prediction_text else 'negative' }}">
+                {{ prediction_text }}
+            </h2>
+        {% endif %}
+
+        <p class="disclaimer">
+            This app provides a model-based prediction. It does not replace professional medical advice.
+        </p>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
