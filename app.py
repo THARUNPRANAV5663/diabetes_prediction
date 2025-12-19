@@ -1,48 +1,35 @@
-from flask import Flask, render_template, request
-import joblib
-import numpy as np
+function toggleTheme() {
+    document.body.classList.toggle("dark-mode");
+    updateToggleLabel();
+}
 
-app = Flask(__name__)
+function updateToggleLabel() {
+    const label = document.getElementById("theme-label");
+    label.innerText = document.body.classList.contains("dark-mode") ? "Dark Mode" : "Light Mode";
+}
 
-# Load model and scaler
-model = joblib.load("models/model.pkl")
-scaler = joblib.load("models/scaler.pkl")
+window.onload = function() {
+    const container = document.createElement("div");
+    container.className = "theme-toggle-container";
 
-@app.route("/")
-def home():
-    return render_template("index.html")
+    const label = document.createElement("span");
+    label.id = "theme-label";
+    label.className = "theme-toggle-label";
+    label.innerText = "Light Mode";
 
-@app.route("/predict", methods=["POST"])
-def predict():
-    try:
-        # Get form data
-        pregnancies = int(request.form["pregnancies"])
-        glucose = float(request.form["glucose"])
-        bloodpressure = float(request.form["bloodpressure"])
-        skin = float(request.form["skin"])
-        insulin = float(request.form["insulin"])
-        bmi = float(request.form["bmi"])
-        pedigree = float(request.form["pedigree"])
-        age = int(request.form["age"])
+    const switchWrap = document.createElement("label");
+    switchWrap.className = "theme-toggle-switch";
 
-        # Prepare input
-        input_data = np.array([[pregnancies, glucose, bloodpressure,
-                                skin, insulin, bmi, pedigree, age]])
-        input_scaled = scaler.transform(input_data)
-        prediction = model.predict(input_scaled)[0]
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.onchange = toggleTheme;
 
-        # Result message
-        if prediction == 1:
-            result = "You have diabetes"
-            color = "red"
-        else:
-            result = "You do not have diabetes"
-            color = "green"
+    const slider = document.createElement("span");
+    slider.className = "slider";
 
-        return render_template("index.html", prediction_text=result, color=color)
-
-    except Exception as e:
-        return render_template("index.html", prediction_text=f"Error: {str(e)}", color="orange")
-
-if __name__ == "__main__":
-    app.run(debug=True)
+    switchWrap.appendChild(checkbox);
+    switchWrap.appendChild(slider);
+    label.appendChild(switchWrap);
+    container.appendChild(label);
+    document.body.appendChild(container);
+};
