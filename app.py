@@ -29,7 +29,7 @@ def predict():
         input_scaled = scaler.transform(input_data)
         prediction = model.predict(input_scaled)[0]
 
-        result = "You have diabetes" if prediction == 1 else "You do not have diabetes"
+        result = "You have diabetes ⚠️" if prediction == 1 else "You do not have diabetes 👍"
         color = "red" if prediction == 1 else "green"
 
         return render_template("index.html", prediction_text=result, color=color)

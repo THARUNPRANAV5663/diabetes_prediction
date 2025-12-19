@@ -1,41 +1,53 @@
-from flask import Flask, render_template, request
-import joblib
-import numpy as np
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Diabetes Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <!-- Toggle button in top-right corner -->
+    <div class="theme-toggle-container">
+        <span id="theme-label" class="theme-toggle-label">Light Mode
+            <label class="theme-toggle-switch">
+                <input type="checkbox" onchange="toggleTheme()">
+                <span class="slider"></span>
+            </label>
+        </span>
+    </div>
 
-app = Flask(__name__)
+    <h1>Diabetes Prediction</h1>
+    <form action="/predict" method="post">
+        <label for="pregnancies">Pregnancies:</label>
+        <input type="number" name="pregnancies" required><br><br>
 
-# Load model and scaler
-model = joblib.load("models/model.pkl")
-scaler = joblib.load("models/scaler.pkl")
+        <label for="glucose">Glucose:</label>
+        <input type="number" name="glucose" required><br><br>
 
-@app.route("/")
-def home():
-    return render_template("index.html")
+        <label for="bloodpressure">Blood Pressure:</label>
+        <input type="number" name="bloodpressure" required><br><br>
 
-@app.route("/predict", methods=["POST"])
-def predict():
-    try:
-        pregnancies = int(request.form["pregnancies"])
-        glucose = float(request.form["glucose"])
-        bloodpressure = float(request.form["bloodpressure"])
-        skin = float(request.form["skin"])
-        insulin = float(request.form["insulin"])
-        bmi = float(request.form["bmi"])
-        pedigree = float(request.form["pedigree"])
-        age = int(request.form["age"])
+        <label for="skin">Skin Thickness:</label>
+        <input type="number" name="skin" required><br><br>
 
-        input_data = np.array([[pregnancies, glucose, bloodpressure,
-                                skin, insulin, bmi, pedigree, age]])
-        input_scaled = scaler.transform(input_data)
-        prediction = model.predict(input_scaled)[0]
+        <label for="insulin">Insulin:</label>
+        <input type="number" name="insulin" required><br><br>
 
-        result = "You have diabetes" if prediction == 1 else "You do not have diabetes"
-        color = "red" if prediction == 1 else "green"
+        <label for="bmi">BMI:</label>
+        <input type="number" name="bmi" step="0.1" required><br><br>
 
-        return render_template("index.html", prediction_text=result, color=color)
+        <label for="pedigree">Diabetes Pedigree Function:</label>
+        <input type="number" name="pedigree" min="0" max="1" step="0.001" required><br><br>
 
-    except Exception as e:
-        return render_template("index.html", prediction_text=f"Error: {str(e)}", color="orange")
+        <label for="age">Age:</label>
+        <input type="number" name="age" required><br><br>
 
-if __name__ == "__main__":
-    app.run(debug=True)
+        <button type="submit">Predict</button>
+    </form>
+
+    {% if prediction_text %}
+        <h2 style="color: {{ color }}">{{ prediction_text }}</h2>
+    {% endif %}
+</body>
+</html>
