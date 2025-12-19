@@ -15,7 +15,7 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        # Collect inputs from form
+        # Get form data
         pregnancies = int(request.form["pregnancies"])
         glucose = float(request.form["glucose"])
         bloodpressure = float(request.form["bloodpressure"])
@@ -25,17 +25,13 @@ def predict():
         pedigree = float(request.form["pedigree"])
         age = int(request.form["age"])
 
-        # Put into numpy array
+        # Prepare input
         input_data = np.array([[pregnancies, glucose, bloodpressure,
                                 skin, insulin, bmi, pedigree, age]])
-
-        # Scale input
         input_scaled = scaler.transform(input_data)
-
-        # Predict
         prediction = model.predict(input_scaled)[0]
 
-        # Friendly message
+        # Result message
         if prediction == 1:
             result = "You have diabetes"
             color = "red"
