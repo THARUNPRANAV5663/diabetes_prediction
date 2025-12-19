@@ -1,24 +1,35 @@
-// Toggle theme and update button text
 function toggleTheme() {
     document.body.classList.toggle("dark-mode");
-    updateButtonText();
+    updateToggleLabel();
 }
 
-// Update button label based on current theme
-function updateButtonText() {
-    const btn = document.getElementById("theme-toggle");
-    if (document.body.classList.contains("dark-mode")) {
-        btn.innerText = "Switch to Light Mode";
-    } else {
-        btn.innerText = "Switch to Dark Mode";
-    }
+function updateToggleLabel() {
+    const label = document.getElementById("theme-label");
+    label.innerText = document.body.classList.contains("dark-mode") ? "Dark Mode" : "Light Mode";
 }
 
-// Add button on page load
 window.onload = function() {
-    const btn = document.createElement("button");
-    btn.id = "theme-toggle";
-    document.body.appendChild(btn);
-    btn.onclick = toggleTheme;
-    updateButtonText();
+    const container = document.createElement("div");
+    container.className = "theme-toggle-container";
+
+    const label = document.createElement("span");
+    label.id = "theme-label";
+    label.className = "theme-toggle-label";
+    label.innerText = "Light Mode";
+
+    const switchWrap = document.createElement("label");
+    switchWrap.className = "theme-toggle-switch";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.onchange = toggleTheme;
+
+    const slider = document.createElement("span");
+    slider.className = "slider";
+
+    switchWrap.appendChild(checkbox);
+    switchWrap.appendChild(slider);
+    label.appendChild(switchWrap);
+    container.appendChild(label);
+    document.body.appendChild(container);
 };
